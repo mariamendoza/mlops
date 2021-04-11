@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "dev"
+    },
+    "project_name": {
+      "value": "dp100"
+    },
+    "workspace_name": {
+      "value": "dp100"
+    },
+    "storage_account": {
+      "value": "dp1001593318337"
+    },
+    "key_vault": {
+      "value": "dp1001319430698"
+    },
+    "application_insights": {
+      "value": "dp1002388402627"
+    }
+  }
+}
