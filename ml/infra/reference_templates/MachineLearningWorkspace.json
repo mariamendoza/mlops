@@ -1,0 +1,47 @@
+{
+  "name": "string",
+  "type": "Microsoft.MachineLearningServices/workspaces",
+  "apiVersion": "2020-08-01",
+  "identity": {
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+  "location": "string",
+  "tags": {},
+  "sku": {
+    "name": "string",
+    "tier": "string"
+  },
+  "properties": {
+    "description": "string",
+    "friendlyName": "string",
+    "keyVault": "string",
+    "applicationInsights": "string",
+    "containerRegistry": "string",
+    "storageAccount": "string",
+    "discoveryUrl": "string",
+    "encryption": {
+      "status": "string",
+      "keyVaultProperties": {
+        "keyVaultArmId": "string",
+        "keyIdentifier": "string",
+        "identityClientId": "string"
+      }
+    },
+    "hbiWorkspace": "boolean",
+    "imageBuildCompute": "string",
+    "allowPublicAccessWhenBehindVnet": "boolean",
+    "sharedPrivateLinkResources": [
+      {
+        "name": "string",
+        "properties": {
+          "privateLinkResourceId": "string",
+          "groupId": "string",
+          "requestMessage": "string",
+          "status": "string"
+        }
+      }
+    ]
+  },
+  "resources": []
+}

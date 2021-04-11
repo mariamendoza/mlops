@@ -1,0 +1,21 @@
+{
+  "name": "string",
+  "type": "Microsoft.Insights/components",
+  "apiVersion": "2020-02-02-preview",
+  "location": "string",
+  "tags": {},
+  "kind": "string",
+  "properties": {
+    "Application_Type": "string",
+    "Flow_Type": "Bluefield",
+    "Request_Source": "rest",
+    "HockeyAppId": "string",
+    "SamplingPercentage": "number",
+    "DisableIpMasking": "boolean",
+    "ImmediatePurgeDataOn30Days": "boolean",
+    "WorkspaceResourceId": "string",
+    "publicNetworkAccessForIngestion": "string",
+    "publicNetworkAccessForQuery": "string",
+    "IngestionMode": "string"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "string",
+  "type": "Microsoft.KeyVault/vaults",
+  "apiVersion": "2019-09-01",
+  "location": "string",
+  "tags": {},
+  "properties": {
+    "tenantId": "string",
+    "sku": {
+      "family": "A",
+      "name": "string"
+    },
+    "accessPolicies": [
+      {
+        "tenantId": "string",
+        "objectId": "string",
+        "applicationId": "string",
+        "permissions": {
+          "keys": [
+            "string"
+          ],
+          "secrets": [
+            "string"
+          ],
+          "certificates": [
+            "string"
+          ],
+          "storage": [
+            "string"
+          ]
+        }
+      }
+    ],
+    "vaultUri": "string",
+    "enabledForDeployment": "boolean",
+    "enabledForDiskEncryption": "boolean",
+    "enabledForTemplateDeployment": "boolean",
+    "enableSoftDelete": "boolean",
+    "softDeleteRetentionInDays": "integer",
+    "enableRbacAuthorization": "boolean",
+    "createMode": "string",
+    "enablePurgeProtection": "boolean",
+    "networkAcls": {
+      "bypass": "string",
+      "defaultAction": "string",
+      "ipRules": [
+        {
+          "value": "string"
+        }
+      ],
+      "virtualNetworkRules": [
+        {
+          "id": "string"
+        }
+      ]
+    }
+  },
+  "resources": []
+}

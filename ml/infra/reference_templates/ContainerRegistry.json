@@ -1,0 +1,60 @@
+{
+  "name": "string",
+  "type": "Microsoft.ContainerRegistry/registries",
+  "apiVersion": "2019-12-01-preview",
+  "location": "string",
+  "tags": {},
+  "sku": {
+    "name": "string"
+  },
+  "identity": {
+    "principalId": "string",
+    "tenantId": "string",
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+  "properties": {
+    "adminUserEnabled": "boolean",
+    "storageAccount": {
+      "id": "string"
+    },
+    "networkRuleSet": {
+      "defaultAction": "string",
+      "virtualNetworkRules": [
+        {
+          "action": "Allow",
+          "id": "string"
+        }
+      ],
+      "ipRules": [
+        {
+          "action": "Allow",
+          "value": "string"
+        }
+      ]
+    },
+    "policies": {
+      "quarantinePolicy": {
+        "status": "string"
+      },
+      "trustPolicy": {
+        "type": "Notary",
+        "status": "string"
+      },
+      "retentionPolicy": {
+        "days": "integer",
+        "status": "string"
+      }
+    },
+    "encryption": {
+      "status": "string",
+      "keyVaultProperties": {
+        "keyIdentifier": "string",
+        "identity": "string"
+      }
+    },
+    "dataEndpointEnabled": "boolean",
+    "publicNetworkAccess": "string"
+  },
+  "resources": []
+}
