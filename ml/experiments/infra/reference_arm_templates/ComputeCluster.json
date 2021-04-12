@@ -1,0 +1,40 @@
+{
+  "name": "string",
+  "type": "Microsoft.MachineLearningServices/workspaces/computes",
+  "apiVersion": "2020-08-01",
+  "identity": {
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+  "location": "string",
+  "tags": {},
+  "sku": {
+    "name": "string",
+    "tier": "string"
+  },
+  "properties": 
+  {
+    "computeType": "AmlCompute",
+    "computeLocation": "string",
+    "description": "string",
+    "resourceId": "string",
+    "properties": {
+      "remoteLoginPortPublicAccess": "string",
+      "scaleSettings": {
+        "maxNodeCount": "integer",
+        "minNodeCount": "integer",
+        "nodeIdleTimeBeforeScaleDown": "string"
+      },
+      "subnet": {
+        "id": "string"
+      },
+      "userAccountCredentials": {
+        "adminUserName": "string",
+        "adminUserPassword": "string",
+        "adminUserSshPublicKey": "string"
+      },
+      "vmPriority": "string",
+      "vmSize": "string"
+    }
+  }  
+}

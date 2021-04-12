@@ -1,0 +1,33 @@
+{
+  "name": "string",
+  "type": "Microsoft.MachineLearningServices/workspaces/computes",
+  "apiVersion": "2020-08-01",
+  "identity": {
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+  "location": "string",
+  "tags": {},
+  "sku": {
+    "name": "string",
+    "tier": "string"
+  },
+  "properties": 
+  {
+    "computeType": "ComputeInstance",
+    "computeLocation": "string",
+    "description": "string",
+    "resourceId": "string",
+    "properties": {
+      "vmSize": "string",
+      "subnet": {
+        "id": "string"
+      },
+      "applicationSharingPolicy": "string",
+      "sshSettings": {
+        "sshPublicAccess": "string",
+        "adminPublicKey": "string"
+      }
+    }
+  }
+}
