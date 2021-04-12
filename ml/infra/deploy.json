@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev"
+    },
+    "project_name": {
+      "type": "string",
+      "maxLength": 10
+    },
+    "workspace_name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 33
+    },
+    "storage_account": {
+      "type": "string",
+      "maxLength": 24,
+      "defaultValue": ""
+    },
+    "key_vault": {
+      "type": "string",
+      "maxLength": 24,
+      "defaultValue": ""
+    },
+    "application_insights": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "variables": {
+    "unique_string": "[uniqueString(parameters('workspace_name'))]",
+    "prefix": "[substring(parameters('workspace_name'), 0, min(5, length(parameters('workspace_name'))))]",
+    "storage_account": "[
+      if(empty(parameters('storage_account')), 
+        concat(variables('prefix'), variables('unique_string'), toLower(parameters('environment'))), 
+        parameters('storage_account'))
+    ]",
+    "key_vault": "[
+      if(empty(parameters('key_vault')), 
+        concat(variables('prefix'), '-', variables('unique_string'), '-', toLower(parameters('environment'))), 
+        parameters('key_vault'))
+    ]",
+    "application_insights": "[
+      if(empty(parameters('application_insights')), 
+        concat(variables('prefix'), '-', variables('unique_string'), '-', toLower(parameters('environment'))), 
+        parameters('application_insights'))
+    ]",
+    "tags": {
+        "Environment": "[parameters('environment')]",
+        "Project": "[parameters('project_name')]"
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('workspace_name')]",
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2020-08-01",
+      "tags": "[variables('tags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage_account'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('key_vault'))]",
+        "[resourceId('Microsoft.Insights/components', variables('application_insights'))]"
+      ],
+      "properties": {
+        "friendlyName": "[parameters('workspace_name')]",
+        "keyVault": "[resourceId('Microsoft.KeyVault/vaults',variables('key_vault'))]",
+        "applicationInsights": "[resourceId('Microsoft.Insights/components',variables('application_insights'))]",
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts/',variables('storage_account'))]"
+      }
+    }
+  ]
+}
