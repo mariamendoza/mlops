@@ -2,20 +2,29 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "compute_instances": {
-      "value": {
-        "name": "test name",
-        "id": "123-abc",
-        "isCurrent": true,
-        "tier": 1
-      }
+    "environment": {
+      "value": "dev"
     },
-    "compute_clusters": {
+    "project": {
+      "value": "dp100"
+    },
+    "workspace": {
+      "value": "dp100"
+    },
+    "computes": {
+      "value": [
+        "{'name': 'esi-dp100','vmSize': 'Standard_DS12_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}",
+        "{'name': 'dp100','vmSize': 'Standard_DS3_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}"
+      ]
+    },
+    "cluster": {
       "value": {
-        "name": "test name",
-        "id": "123-abc",
-        "isCurrent": true,
-        "tier": 1
+        "name": "compute-07",
+        "maxNodes": 4,
+        "minNodes": 0,
+        "scaleDownIdleTime": "600",
+        "vmPriority": "LowPriority",
+        "vmSize": "Standard_DS12_v2"
       }
     }
   }

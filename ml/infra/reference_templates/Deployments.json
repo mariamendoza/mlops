@@ -1,0 +1,36 @@
+{
+  "name": "string",
+  "type": "Microsoft.Resources/deployments",
+  "apiVersion": "2020-10-01",
+  "location": "string",
+  "scope": "string",
+  "subscriptionId": "string",
+  "resourceGroup": "string",
+  "properties": {
+    "template": {},
+    "templateLink": {
+      "uri": "string",
+      "id": "string",
+      "relativePath": "string",
+      "contentVersion": "string",
+      "queryString": "string"
+    },
+    "parameters": {},
+    "parametersLink": {
+      "uri": "string",
+      "contentVersion": "string"
+    },
+    "mode": "string",
+    "debugSetting": {
+      "detailLevel": "string"
+    },
+    "onErrorDeployment": {
+      "type": "string",
+      "deploymentName": "string"
+    },
+    "expressionEvaluationOptions": {
+      "scope": "string"
+    }
+  },
+  "tags": {}
+}

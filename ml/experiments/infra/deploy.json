@@ -2,81 +2,90 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "compute_instances": {
+    "environment": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "workspace": {
+      "type": "string"
+    },
+    "cluster": {
       "type": "object",
       "defaultValue": {
-        "prefix": "compute",
-        "vmtype": "CPU",
-        "vmsize": "Standard_DS12_v2",
-      },
-    "compute_instance_users":
-      "type": ,no,
+        "name": "cluster1",
+        "maxNodes": 4,
+        "minNodes": 0,
+        "scaleDownIdleTime": "600",
+        "vmPriority": "LowPriority",
+        "vmSize": "Standard_DS12_v2"
+      }
+    },
+    "computes": {
+      "type": "array",
+      "metadata": {
+        "description": "array of json strings. json keys are: name, vmSize, userObjectId, userTenantId and userName"
+      }
+    }
+  },
+  "variables": {
+    "tags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "[parameters('project')]"
     }
   },
   "resources": [
     {
-      "name": "string",
-      "type": "Microsoft.MachineLearningServices/workspaces/computes",
-      "apiVersion": "2020-08-01",
-      "tags": {},
-      "properties": 
-      {
-        "computeType": "ComputeInstance",
-        "description": "string",
-        "properties": {
-          "vmSize": "string",
-          "personalComputeInstanceSettings": {
-              "assignedUser": {
-                  "objectId": "[parameters('objectId')]",
-                  "tenantId": "[parameters('tenantId')]"
-              }
-          }
-        }
-      },
-      "copy": {
-        "name": "",
-        "count": ""
-      }
-    },
-    {
-      "name": "string",
+      "name": "[concat(parameters('workspace'), '/', json(parameters('computes')[copyIndex()])['name'])]",
       "type": "Microsoft.MachineLearningServices/workspaces/computes",
       "apiVersion": "2020-08-01",
       "identity": {
         "type": "SystemAssigned"
-     },
-      "location": "string",
-      "tags": {},
-      "sku": {
-        "name": "string",
-        "tier": "string"
       },
+      "tags": "[variables('tags')]",
+      "properties": 
+      {
+        "computeType": "ComputeInstance",
+        "description": "[concat('Compute Instance for ', json(parameters('computes')[copyIndex()])['userName'])]",
+        "properties": {
+          "vmSize": "[json(parameters('computes')[copyIndex()])['vmSize']]",
+          "personalComputeInstanceSettings": {
+            "assignedUser": {
+                "objectId": "[json(parameters('computes')[copyIndex()])['userObjectId']]",
+                "tenantId": "[json(parameters('computes')[copyIndex()])['userTenantId']]"
+            }
+          }
+        }
+      },
+      "copy": {
+        "name": "copyComputeInstance",
+        "count": "[length(parameters('computes'))]"
+      }
+    },
+    // next resource
+    {
+      "name": "[parameters('cluster')['name']]",
+      "type": "Microsoft.MachineLearningServices/workspaces/computes",
+      "apiVersion": "2020-08-01",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": "[variables('tags')]",
       "properties": 
       {
         "computeType": "AmlCompute",
-        "computeLocation": "string",
-        "description": "string",
-        "resourceId": "string",
+        "description": "Cluster for running pipelines",
         "properties": {
-          "remoteLoginPortPublicAccess": "string",
           "scaleSettings": {
-            "maxNodeCount": "integer",
-            "minNodeCount": "integer",
-            "nodeIdleTimeBeforeScaleDown": "string"
+            "maxNodeCount": "[parameters('cluster')['maxNodes']]",
+            "minNodeCount": "[parameters('cluster')['minNodes']]",
+            "nodeIdleTimeBeforeScaleDown": "[parameters('cluster')['scaleDownIdleTime']]",
           },
-          "subnet": {
-            "id": "string"
-          },
-          "userAccountCredentials": {
-            "adminUserName": "string",
-            "adminUserPassword": "string",
-            "adminUserSshPublicKey": "string"
-          },
-          "vmPriority": "string",
-          "vmSize": "string"
+          "vmPriority": "[parameters('cluster')['vmPriority']]",
+          "vmSize": "[parameters('cluster')['vmSize']]"
         }
-      }
+      }  
     }
   ]
 }
-
