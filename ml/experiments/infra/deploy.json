@@ -65,7 +65,7 @@
     },
     // next resource
     {
-      "name": "[parameters('cluster')['name']]",
+      "name": "[concat(parameters('workspace'), '/', parameters('cluster')['name'])]",
       "type": "Microsoft.MachineLearningServices/workspaces/computes",
       "apiVersion": "2020-08-01",
       "identity": {
@@ -80,7 +80,7 @@
           "scaleSettings": {
             "maxNodeCount": "[parameters('cluster')['maxNodes']]",
             "minNodeCount": "[parameters('cluster')['minNodes']]",
-            "nodeIdleTimeBeforeScaleDown": "[parameters('cluster')['scaleDownIdleTime']]",
+            "nodeIdleTimeBeforeScaleDown": "[parameters('cluster')['scaleDownIdleTime']]"
           },
           "vmPriority": "[parameters('cluster')['vmPriority']]",
           "vmSize": "[parameters('cluster')['vmSize']]"
