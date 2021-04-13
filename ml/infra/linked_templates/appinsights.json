@@ -1,0 +1,23 @@
+{
+  "name": "string",
+  "type": "Microsoft.Insights/components",
+  "apiVersion": "2020-02-02-preview",
+  "location": "string",
+  "tags": {},
+  "kind": "web",
+  "properties": {
+    "Name": "string",
+    "Ver": "v2",
+    "Application_Type": "web",
+    "Flow_Type": null,
+    "Request_Source": null,
+    "HockeyAppId": "string",
+    "SamplingPercentage": "number",
+    "DisableIpMasking": "boolean",
+    "ImmediatePurgeDataOn30Days": "boolean",
+    "WorkspaceResourceId": "string",
+    "publicNetworkAccessForIngestion": "string",
+    "publicNetworkAccessForQuery": "string",
+    "IngestionMode": "ApplicationInsights"
+  }
+}

@@ -2,9 +2,8 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storage_account": {
-      "type": "string",
-      "maxLength": 24,
+    "name": {
+      "type": "string"
     },
     "tags": {
       "type": "object"
@@ -12,7 +11,7 @@
   },
   "resources": [
     {
-      "name": "[parameters('storage_account')]",
+      "name": "[parameters('name')]",
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2019-06-01",
       "sku": {
@@ -26,78 +25,27 @@
         "type": "SystemAssigned"
       },
       "properties": {
-        "customDomain": {
-          "name": "string",
-          "useSubDomainName": "boolean"
-        },
         "encryption": {
           "services": {
             "blob": {
-              "enabled": "boolean",
-              "keyType": "string"
+              "enabled": true,
+              "keyType": "Account"
             },
             "file": {
-              "enabled": "boolean",
-              "keyType": "string"
-            },
-            "table": {
-              "enabled": "boolean",
-              "keyType": "string"
-            },
-            "queue": {
-              "enabled": "boolean",
-              "keyType": "string"
+              "enabled": true,
+              "keyType": "Account"
             }
           },
-          "keySource": "string",
-          "requireInfrastructureEncryption": "boolean",
-          "keyvaultproperties": {
-            "keyname": "string",
-            "keyversion": "string",
-            "keyvaulturi": "string"
-          }
+          "keySource": "Microsoft.Storage"
         },
         "networkAcls": {
-          "bypass": "string",
-          "virtualNetworkRules": [
-            {
-              "id": "string",
-              "action": "Allow",
-              "state": "string"
-            }
-          ],
-          "ipRules": [
-            {
-              "value": "string",
-              "action": "Allow"
-            }
-          ],
-          "defaultAction": "string"
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
         },
-        "accessTier": "string",
-        "azureFilesIdentityBasedAuthentication": {
-          "directoryServiceOptions": "string",
-          "activeDirectoryProperties": {
-            "domainName": "string",
-            "netBiosDomainName": "string",
-            "forestName": "string",
-            "domainGuid": "string",
-            "domainSid": "string",
-            "azureStorageSid": "string"
-          }
-        },
-        "supportsHttpsTrafficOnly": "boolean",
-        "isHnsEnabled": "boolean",
-        "largeFileSharesState": "string",
-        "routingPreference": {
-          "routingChoice": "string",
-          "publishMicrosoftEndpoints": "boolean",
-          "publishInternetEndpoints": "boolean"
-        },
-        "allowBlobPublicAccess": "boolean",
-        "minimumTlsVersion": "string"
-      },
-      "resources": []
+        "accessTier": "Hot"
+      }
     }
   ]
 }

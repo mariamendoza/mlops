@@ -5,20 +5,23 @@
     "environment": {
       "value": "dev"
     },
-    "project_name": {
+    "project": {
       "value": "dp100"
     },
-    "workspace_name": {
+    "mlWorkspace": {
       "value": "dp100"
     },
-    "storage_account": {
+    "storageAccount": {
       "value": "dp1001593318337"
     },
-    "key_vault": {
+    "keyVault": {
       "value": "dp1001319430698"
     },
-    "application_insights": {
+    "appInsights": {
       "value": "dp1002388402627"
+    },
+    "containerRegistry": {
+      "value": ""
     }
   }
 }
