@@ -6,9 +6,6 @@ trigger:
     include:
     - ml
 
-pool:
-  vmImage: ubuntu-latest
-
 stages:
 - stage: dev
   jobs:
