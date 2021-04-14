@@ -14,7 +14,7 @@ stages:
   jobs:
   # - job: build
   # - job: unit test
-  - job: deploy azure workspace resources
+  - job: deploy
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
