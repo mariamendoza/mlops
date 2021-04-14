@@ -3,72 +3,127 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "environment": {
-      "type": "string",
-      "defaultValue": "dev"
+      "type": "string"
     },
-    "project_name": {
-      "type": "string",
-      "maxLength": 10
+    "project": {
+      "type": "string"
     },
-    "workspace_name": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 33
+    "mlWorkspace": {
+      "type": "string"
     },
-    "storage_account": {
-      "type": "string",
-      "maxLength": 24,
-      "defaultValue": ""
+    "storageAccount": {
+      "type": "string"
     },
-    "key_vault": {
-      "type": "string",
-      "maxLength": 24,
-      "defaultValue": ""
+    "keyVault": {
+      "type": "object"
     },
-    "application_insights": {
-      "type": "string",
-      "defaultValue": ""
+    "appInsights": {
+      "type": "string"
+    },
+    "containerRegistry": {
+      "type": "string"
     }
   },
   "variables": {
-    "unique_string": "[uniqueString(parameters('workspace_name'))]",
-    "prefix": "[substring(parameters('workspace_name'), 0, min(5, length(parameters('workspace_name'))))]",
-    "storage_account": "[
-      if(empty(parameters('storage_account')), 
-        concat(variables('prefix'), variables('unique_string'), toLower(parameters('environment'))), 
-        parameters('storage_account'))
-    ]",
-    "key_vault": "[
-      if(empty(parameters('key_vault')), 
-        concat(variables('prefix'), '-', variables('unique_string'), '-', toLower(parameters('environment'))), 
-        parameters('key_vault'))
-    ]",
-    "application_insights": "[
-      if(empty(parameters('application_insights')), 
-        concat(variables('prefix'), '-', variables('unique_string'), '-', toLower(parameters('environment'))), 
-        parameters('application_insights'))
-    ]",
     "tags": {
         "Environment": "[parameters('environment')]",
-        "Project": "[parameters('project_name')]"
-    }
+        "Project": "[parameters('project')]"
+    },
+    "mlWorkspaceDependsOnRequired": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVault').name)]",
+        "[resourceId('Microsoft.Insights/components', parameters('appInsights'))]"
+    ],
+    "mlWorkspaceDependsOnContainerRegistry": "[
+      if(empty(parameters('containerRegistry')), 
+        createArray(), 
+        createArray(resourceId('Microsoft.ContainerRegistry/registries', parameters('containerRegistry')))
+      )
+    ]"
   },
   "resources": [
-    {
-      "name": "[parameters('workspace_name')]",
+    { // Key Vault
+      "name": "[parameters('keyVault').name]",
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2019-09-01",
+      "location": "[resourceGroup().location]",
+      "tags": "[variables('tags')]",
+      "properties": {
+        "tenantId": "[parameters('keyVault').tenantId]", // active directory tenant id
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "enabledForDeployment": "[parameters('keyVault').enabledForDeployment]",
+        "enabledForTemplateDeployment": "[parameters('keyVault').enabledForTemplateDeployment]",
+        "enableSoftDelete": "[parameters('keyVault').enableSoftDelete]",
+        "softDeleteRetentionInDays": "[parameters('keyVault').softDeleteRetentionInDays]"
+      }
+    },
+    {    // App Insights
+      "name": "[parameters('appInsights')]",
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02-preview",
+      "location": "[resourceGroup().location]",
+      "tags": "[variables('tags')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "RetentionInDays": 90,
+        "publicNetworkAccessForIngestion": "Enabled",
+        "publicNetworkAccessForQuery": "Enabled",
+        "IngestionMode": "ApplicationInsights"
+      }
+    },
+    { //Container Registry
+      "name": "[parameters('containerRegistry')]",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-12-01-preview",
+      "location": "[resourceGroup().location]",
+      "tags": "[variables('tags')]",
+      "sku": {
+        "name": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": true
+      },
+      "copy": {
+        "name": "copyStorage",
+        "count": "[length(variables('mlWorkspaceDependsOnContainerRegistry'))]"
+      }
+    },
+    { // Storage Account
+      "name": "[parameters('storageAccount')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "location": "[resourceGroup().location]",
+      "tags": "[variables('tags')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "accessTier": "Hot",
+        "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false
+      }
+    },    
+    {    // Azure ML Workspace
+      "name": "[parameters('mlWorkspace').name]",
       "type": "Microsoft.MachineLearningServices/workspaces",
       "apiVersion": "2020-08-01",
       "tags": "[variables('tags')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage_account'))]",
-        "[resourceId('Microsoft.KeyVault/vaults', variables('key_vault'))]",
-        "[resourceId('Microsoft.Insights/components', variables('application_insights'))]"
-      ],
+      "dependsOn": "[concat(variables('mlWorkspaceDependsOnRequired'),variables('mlWorkspaceDependsOnContainerRegistry'))]",
       "properties": {
-        "friendlyName": "[parameters('workspace_name')]",
-        "keyVault": "[resourceId('Microsoft.KeyVault/vaults',variables('key_vault'))]",
-        "applicationInsights": "[resourceId('Microsoft.Insights/components',variables('application_insights'))]",
-        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts/',variables('storage_account'))]"
+        "friendlyName": "[parameters('mlWorkspace').name]",
+        "keyVault": "[resourceId('Microsoft.KeyVault/vaults',parameters('keyVault').name)]",
+        "applicationInsights": "[resourceId('Microsoft.Insights/components',parameters('appInsights'))]",
+        "containerRegistry": "[resourceId('Microsoft.ContainerRegistry/registries',parameters('containerRegistry'))]",
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts/',parameters('storageAccount'))]"
       }
     }
   ]

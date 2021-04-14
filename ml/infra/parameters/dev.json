@@ -15,13 +15,20 @@
       "value": "dp1001593318337"
     },
     "keyVault": {
-      "value": "dp1001319430698"
+      "value": {
+        "name": "dp1001319430698",
+        "tenantId": "3d2eac2c-81ec-4951-b44e-e8e628a011b9",
+        "enabledForDeployment": true,
+        "enabledForTemplateDeployment": true,
+        "enableSoftDelete": true,
+        "softDeleteRetentionInDays": 90       
+      }
     },
     "appInsights": {
       "value": "dp1002388402627"
     },
     "containerRegistry": {
-      "value": ""
+      "value": "dd45b15040a74689bdece106d055208d"
     }
   }
 }
