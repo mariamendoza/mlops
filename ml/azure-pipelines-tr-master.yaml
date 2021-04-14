@@ -1,0 +1,44 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: experiment
+  - steps:
+    - deploy arm template in experiments
+
+- stage: dev
+  jobs:
+    - job: build
+    - job: unit test
+    - job: deploy
+
+- stage: test
+  jobs:
+    - job: deploy
+      steps:
+        - deploy azure workspace resources
+        - deploy pipeline endpoints
+          - preprocessing
+          - score
+        - deploy monitoring resources
+    - job: integration test
+      steps:
+        - test preprocessing pipeline
+        - test score pipeline
+    - job: notification
+      steps:
+        - send notification for approval gate
+
+- stage: prod
+  jobs:
+    - job: deploy
+      steps:
+        - deploy azure workspace resources
+        - deploy pipeline endpoints
+          - preprocessing
+          - score
+        - deploy monitoring resources
+
