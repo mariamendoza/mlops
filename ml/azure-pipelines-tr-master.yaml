@@ -12,8 +12,8 @@ pool:
 stages:
 - stage: dev
   jobs:
-  - job: build
-  - job: unit test
+  # - job: build
+  # - job: unit test
   - job: deploy azure workspace resources
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
