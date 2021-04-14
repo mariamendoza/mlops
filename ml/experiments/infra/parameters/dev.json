@@ -20,8 +20,8 @@
     "cluster": {
       "value": {
         "name": "pep1-cluster1",
-        "maxNodes": 4,
         "minNodes": 0,
+        "maxNodes": 4,
         "scaleDownIdleTime": "600",
         "vmPriority": "LowPriority",
         "vmSize": "Standard_DS12_v2"
