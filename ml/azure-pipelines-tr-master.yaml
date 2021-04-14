@@ -5,15 +5,15 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: experiment
-  - steps:
-    - deploy arm template in experiments
-
 - stage: dev
   jobs:
     - job: build
     - job: unit test
-    - job: deploy
+    - job: deploy azure workspace resources
+
+- stage: experiment
+  - steps:
+    - deploy arm template in experiments
 
 - stage: test
   jobs:
