@@ -6,17 +6,17 @@
       "value": "dev"
     },
     "project": {
-      "value": "dp100"
+      "value": "pep1"
     },
     "mlWorkspace": {
-      "value": "dp100"
+      "value": "pep1dev"
     },
     "storageAccount": {
-      "value": "dp1001593318337"
+      "value": "pep1sadev"
     },
     "keyVault": {
       "value": {
-        "name": "dp1001319430698",
+        "name": "pep1kvdev",
         "tenantId": "3d2eac2c-81ec-4951-b44e-e8e628a011b9",
         "enabledForDeployment": true,
         "enabledForTemplateDeployment": true,
@@ -25,10 +25,10 @@
       }
     },
     "appInsights": {
-      "value": "dp1002388402627"
+      "value": "pep1insightsdev"
     },
     "containerRegistry": {
-      "value": "dd45b15040a74689bdece106d055208d"
+      "value": "pep1acrdev"
     }
   }
 }

@@ -6,20 +6,20 @@
       "value": "dev"
     },
     "project": {
-      "value": "dp100"
+      "value": "pep1"
     },
     "workspace": {
-      "value": "dp100"
+      "value": "pep1"
     },
     "computes": {
       "value": [
-        "{'name': 'esi-dp100','vmSize': 'Standard_DS12_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}",
-        "{'name': 'dp100','vmSize': 'Standard_DS3_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}"
+        "{'name': 'pep1-compute1','vmSize': 'Standard_DS12_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}",
+        "{'name': 'pep1-compute2','vmSize': 'Standard_DS3_v2','userObjectId': '026e20cd-d5f1-4638-948a-0173a6ee2d15','userTenantId': '3d2eac2c-81ec-4951-b44e-e8e628a011b9','userName': 'auimendoza'}"
       ]
     },
     "cluster": {
       "value": {
-        "name": "compute-07",
+        "name": "pep1-cluster1",
         "maxNodes": 4,
         "minNodes": 0,
         "scaleDownIdleTime": "600",
