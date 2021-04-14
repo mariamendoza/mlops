@@ -12,7 +12,7 @@ To run experiments at scale, there needs to be at least 1 compute cluster for ex
 
 ## Setup your compute instance to connect to your project repository in Azure DevOps
 
-1. Start your compute instance. Do `Compute > Compute Instances > choose your instance > Start`
+1. Start your compute instance. In the Azure ML Workspace, do `Compute > Compute Instances > choose your instance > Start`
 2. Open Terminal, either by clicking on `Terminal` for your instance or click on `JupyterLab > Launcher > $_ (Terminal)`
 3. Create a key pair in Terminal. 
    ```
@@ -23,7 +23,7 @@ To run experiments at scale, there needs to be at least 1 compute cluster for ex
    $ cat ~/.ssh/id_rsa.pub
    ```
    Copy the text.
-5. Go to Azure DevOps > User settings (upper right corner) > SSH Public Keys > New Key. Give it a name. Paste the contents of `id_rsa.pub` in Public Key Data.
+5. Go to `Azure DevOps > User settings (upper right corner) > SSH Public Keys > New Key`. Give it a name. Paste the contents of `id_rsa.pub` in Public Key Data.
 6. Get your repository uri. `Azure DevOps > <Project Repo> > Clone (upper right) > SSH > copy icon`
 6. Go back to Terminal. Navigate to your user directory. 
     ```
@@ -37,5 +37,5 @@ To run experiments at scale, there needs to be at least 1 compute cluster for ex
 
 **Notes**
 
-*For NLP POC project, use path `huron/taxonomypoc/experiments`.*
-*AzureML Python SDK and most common AI/ML Pyton packages are installed by default in the Compute Instance. To check `$ pip show <package name>`*
+- For NLP POC project, use path `huron/taxonomypoc/experiments`.
+- AzureML Python SDK and most common AI/ML Pyton packages are installed by default in the Compute Instance. To check `$ pip show <package name>`
