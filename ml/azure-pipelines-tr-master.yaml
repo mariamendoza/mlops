@@ -12,52 +12,52 @@ pool:
 stages:
 - stage: dev
   jobs:
-    - job: build
-    - job: unit test
-    - job: deploy azure workspace resources
-      steps:
-      - task: AzureResourceManagerTemplateDeployment@3
-        inputs:
-          deploymentScope: 'Resource Group'
-          azureResourceManagerConnection: 'azrm'
-          subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
-          action: 'Create Or Update Resource Group'
-          resourceGroupName: 'dp100'
-          location: 'East US'
-          templateLocation: 'Linked artifact'
-          csmFile: 'infra/deploy.json'
-          csmParametersFile: 'infra/parameters/dev.json'
-          deploymentMode: 'Incremental'
-          deploymentName: 'test'
+  - job: build
+  - job: unit test
+  - job: deploy azure workspace resources
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'azrm'
+        subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'dp100'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: 'infra/deploy.json'
+        csmParametersFile: 'infra/parameters/dev.json'
+        deploymentMode: 'Incremental'
+        deploymentName: 'test'
 
-- stage: experiment
-  - steps:
-    - deploy arm template in experiments
+# - stage: experiment
+#   - steps:
+#     - deploy arm template in experiments
 
-- stage: test
-  jobs:
-    - job: deploy
-      steps:
-        - deploy azure workspace resources
-        - deploy pipeline endpoints
-          - preprocessing
-          - score
-        - deploy monitoring resources
-    - job: integration test
-      steps:
-        - test preprocessing pipeline
-        - test score pipeline
-    - job: notification
-      steps:
-        - send notification for approval gate
+# - stage: test
+#   jobs:
+#     - job: deploy
+#       steps:
+#         - deploy azure workspace resources
+#         - deploy pipeline endpoints
+#           - preprocessing
+#           - score
+#         - deploy monitoring resources
+#     - job: integration test
+#       steps:
+#         - test preprocessing pipeline
+#         - test score pipeline
+#     - job: notification
+#       steps:
+#         - send notification for approval gate
 
-- stage: prod
-  jobs:
-    - job: deploy
-      steps:
-        - deploy azure workspace resources
-        - deploy pipeline endpoints
-          - preprocessing
-          - score
-        - deploy monitoring resources
+# - stage: prod
+#   jobs:
+#     - job: deploy
+#       steps:
+#         - deploy azure workspace resources
+#         - deploy pipeline endpoints
+#           - preprocessing
+#           - score
+#         - deploy monitoring resources
 
