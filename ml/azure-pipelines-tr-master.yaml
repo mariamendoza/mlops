@@ -1,5 +1,10 @@
 trigger:
-- master
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - ml
 
 pool:
   vmImage: ubuntu-latest
@@ -10,6 +15,20 @@ stages:
     - job: build
     - job: unit test
     - job: deploy azure workspace resources
+      steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          deploymentScope: 'Resource Group'
+          azureResourceManagerConnection: 'azrm'
+          subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: 'dp100'
+          location: 'East US'
+          templateLocation: 'Linked artifact'
+          csmFile: 'infra/deploy.json'
+          csmParametersFile: 'infra/parameters/dev.json'
+          deploymentMode: 'Incremental'
+          deploymentName: 'test'
 
 - stage: experiment
   - steps:
