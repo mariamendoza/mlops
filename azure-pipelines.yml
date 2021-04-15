@@ -10,13 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureResourceManagerTemplateDeployment@3
+- task: AzureCLI@2
   inputs:
-    deploymentScope: 'Subscription'
-    azureResourceManagerConnection: 'azrm'
-    subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
-    location: 'East US'
-    templateLocation: 'Linked artifact'
-    csmFile: 'ml/infra/deploy.json'
-    csmParametersFile: 'ml/infra/parameter/dev.json'
-    deploymentMode: 'Incremental'
+    azureSubscription: 'azrm'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az deployment group create --resource-group "dp100" --template-file "./ml/infra/deploy.json"  --parameters "./ml/infra/parameters/dev.json --output json'
