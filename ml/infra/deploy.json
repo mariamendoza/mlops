@@ -40,6 +40,7 @@
           "family": "A",
           "name": "standard"
         },
+        "accessPolicies": [],
         "enabledForDeployment": "[parameters('keyVault').enabledForDeployment]",
         "enabledForTemplateDeployment": "[parameters('keyVault').enabledForTemplateDeployment]",
         "enableSoftDelete": "[parameters('keyVault').enableSoftDelete]",
