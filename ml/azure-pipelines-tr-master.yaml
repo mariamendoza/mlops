@@ -22,8 +22,8 @@ stages:
         resourceGroupName: 'dp100'
         location: 'East US'
         templateLocation: 'Linked artifact'
-        csmFile: 'infra/deploy.json'
-        csmParametersFile: 'infra/parameters/dev.json'
+        csmFile: 'ml/infra/deploy.json'
+        csmParametersFile: 'ml/infra/parameters/dev.json'
         deploymentMode: 'Incremental'
         deploymentName: 'test'
 

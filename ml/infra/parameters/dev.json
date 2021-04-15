@@ -26,9 +26,6 @@
     },
     "appInsights": {
       "value": "pep1insightsdev"
-    },
-    "containerRegistry": {
-      "value": "pep1acrdev"
     }
   }
 }
