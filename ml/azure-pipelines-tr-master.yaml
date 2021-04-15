@@ -5,6 +5,8 @@ trigger:
   paths:
     include:
     - ml
+    exclude:
+    - ml/experiments
 
 stages:
 - stage: dev
@@ -26,10 +28,6 @@ stages:
         csmParametersFile: 'ml/infra/parameters/dev.json'
         deploymentMode: 'Incremental'
         deploymentName: 'test'
-
-# - stage: experiment
-#   - steps:
-#     - deploy arm template in experiments
 
 # - stage: test
 #   jobs:

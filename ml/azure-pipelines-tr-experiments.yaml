@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - ml/experiments
+
+name: create-computes
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    inputs:
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: 'azrm'
+      subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: 'dp100'
+      location: 'East US'
+      templateLocation: 'Linked artifact'
+      csmFile: 'ml/experiments/infra/deploy.json'
+      csmParametersFile: 'ml/experiments/infra/parameters/dev.json'
+      deploymentMode: 'Incremental'
