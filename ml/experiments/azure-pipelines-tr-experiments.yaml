@@ -11,7 +11,7 @@ variables:
 - name: infraArmTemplateParameterFile
   value: ml/infra/experiments/parameters/dev.json
 - name: infraArmTemplate
-  value: ml/infra/experiment/deploy.json
+  value: ml/infra/experiments/deploy.json
 
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
