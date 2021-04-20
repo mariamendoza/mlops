@@ -39,5 +39,4 @@ To run experiments at scale, there needs to be at least 1 compute cluster for ex
 
 **Notes**
 
-- For NLP POC project, use path `huron/taxonomypoc/experiments`.
 - AzureML Python SDK and most common AI/ML Pyton packages are installed by default in the Compute Instance. To check `$ pip show <package name>`
