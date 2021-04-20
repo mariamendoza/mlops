@@ -8,6 +8,9 @@
     "project": {
       "type": "string"
     },
+    "tenantId": {
+      "type": "securestring"
+    },
     "mlWorkspace": {
       "type": "string"
     },
@@ -35,7 +38,7 @@
       "location": "[resourceGroup().location]",
       "tags": "[variables('tags')]",
       "properties": {
-        "tenantId": "[parameters('keyVault').tenantId]", // active directory tenant id
+        "tenantId": "[parameters('tenantId')]", // active directory tenant id
         "sku": {
           "family": "A",
           "name": "standard"
