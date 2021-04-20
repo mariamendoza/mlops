@@ -9,9 +9,9 @@ trigger:
 variables:
 - group: mlops-dev
 - name: infraArmTemplateParameterFile
-  value: ml/infra/parameters/dev.json
+  value: ml/infra/experiments/parameters/dev.json
 - name: infraArmTemplate
-  value: ml/infra/deploy.json
+  value: ml/infra/experiment/deploy.json
 
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
