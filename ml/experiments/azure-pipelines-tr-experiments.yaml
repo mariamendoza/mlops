@@ -6,17 +6,24 @@ trigger:
     include:
     - ml/experiments
 
+variables:
+- group: mlops-dev
+- name: infraArmTemplateParameterFile
+  value: ml/infra/parameters/dev.json
+- name: infraArmTemplate
+  value: ml/infra/deploy.json
+
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     overrideParameters: 
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'azrm'
-    subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
+    subscriptionId: $(subscriptionId)
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'dp100'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: 'ml/experiments/infra/deploy.json'
-    csmParametersFile: 'ml/experiments/infra/parameters/dev.json'
+    csmFile: $(infraArmTemplateParameterFile)
+    csmParametersFile: $(infraArmTemplate)
     deploymentMode: 'Incremental'
