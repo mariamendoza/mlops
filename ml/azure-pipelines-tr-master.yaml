@@ -14,18 +14,21 @@ stages:
   # - job: build
   # - job: unit test
   - job: deploy
+    variables:
+    - group: mlops-dev
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
+        overrideParameters: 
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'azrm'
-        subscriptionId: 'fbfc77ed-6780-41e8-8a3f-21e1083cd1e2'
+        subscriptionId: $(subscriptionId)
         action: 'Create Or Update Resource Group'
         resourceGroupName: 'dp100'
         location: 'East US'
         templateLocation: 'Linked artifact'
-        csmFile: 'ml/infra/deploy.json'
-        csmParametersFile: 'ml/infra/parameters/dev.json'
+        csmFile: $(infraArmTemplate)
+        csmParametersFile: $(infraArmTemplateParameterFile)
         deploymentMode: 'Incremental'
         deploymentName: 'test'
 
