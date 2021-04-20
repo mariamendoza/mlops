@@ -9,9 +9,9 @@ trigger:
 variables:
 - group: mlops-dev
 - name: infraArmTemplateParameterFile
-  value: ml/infra/experiments/parameters/dev.json
+  value: "ml/infra/experiments/parameters/dev.json"
 - name: infraArmTemplate
-  value: ml/infra/experiments/deploy.json
+  value: "ml/infra/experiments/deploy.json"
 
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
@@ -24,6 +24,6 @@ steps:
     resourceGroupName: 'dp100'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: $(infraArmTemplateParameterFile)
-    csmParametersFile: $(infraArmTemplate)
+    csmFile: $(infraArmTemplate)
+    csmParametersFile: $(infraArmTemplateParameterFile)
     deploymentMode: 'Incremental'
