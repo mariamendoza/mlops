@@ -1,0 +1,88 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string"
+    },
+    "project": {
+      "type": "string"
+    },
+    "workspace": {
+      "type": "string"
+    },
+    "cluster": {
+      "type": "object",
+      "defaultValue": {
+        "name": "cluster1",
+        "maxNodes": 4,
+        "minNodes": 0,
+        "scaleDownIdleTime": "600",
+        "vmPriority": "LowPriority",
+        "vmSize": "Standard_DS12_v2"
+      }
+    },
+    "compute1": {
+      "type": "object",
+      "metadata": {
+        "description": "keys are: name, vmSize, userObjectId, userTenantId and userName"
+      }
+    }
+  },
+  "variables": {
+    "tags": {
+      "Environment": "[parameters('environment')]",
+      "Project": "[parameters('project')]"
+    }
+  },
+  "resources": [
+    // compute1
+    {
+      "name": "[concat(parameters('workspace'), '/', parameters('compute1').name)]",
+      "type": "Microsoft.MachineLearningServices/workspaces/computes",
+      "apiVersion": "2020-08-01",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": "[variables('tags')]",
+      "properties": 
+      {
+        "computeType": "ComputeInstance",
+        "description": "[concat('Compute Instance for ', parameters('compute1').userName)]",
+        "properties": {
+          "vmSize": "[parameters('compute1').vmSize]",
+          "personalComputeInstanceSettings": {
+            "assignedUser": {
+                "objectId": "[parameters('compute1').userObjectId]",
+                "tenantId": "[parameters('compute1').userTenantId]"
+            }
+          }
+        }
+      }
+    },
+    // next resource
+    {
+      "name": "[concat(parameters('workspace'), '/', parameters('cluster')['name'])]",
+      "type": "Microsoft.MachineLearningServices/workspaces/computes",
+      "apiVersion": "2020-08-01",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "tags": "[variables('tags')]",
+      "properties": 
+      {
+        "computeType": "AmlCompute",
+        "description": "Cluster for running pipelines",
+        "properties": {
+          "scaleSettings": {
+            "maxNodeCount": "[parameters('cluster')['maxNodes']]",
+            "minNodeCount": "[parameters('cluster')['minNodes']]",
+            "nodeIdleTimeBeforeScaleDown": "[parameters('cluster')['scaleDownIdleTime']]"
+          },
+          "vmPriority": "[parameters('cluster')['vmPriority']]",
+          "vmSize": "[parameters('cluster')['vmSize']]"
+        }
+      }  
+    }
+  ]
+}

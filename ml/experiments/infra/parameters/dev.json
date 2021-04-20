@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "dev"
+    },
+    "project": {
+      "value": "pep1"
+    },
+    "workspace": {
+      "value": "pep1dev"
+    },
+    "compute1": {
+      "value": {
+        "name": "pep1-compute1",
+        "vmSize": "Standard_DS12_v2",
+        "userObjectId": "",
+        "userTenantId": "",
+        "userName": "auimendoza"
+      }
+    },
+    "cluster": {
+      "value": {
+        "name": "pep1-cluster1",
+        "minNodes": 0,
+        "maxNodes": 4,
+        "scaleDownIdleTime": "600",
+        "vmPriority": "LowPriority",
+        "vmSize": "Standard_DS12_v2"
+      }
+    }
+  }
+}
