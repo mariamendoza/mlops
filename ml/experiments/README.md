@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/auimendoza/pipelines-azureml/_apis/build/status/mlops-experiments?branchName=master)](https://dev.azure.com/auimendoza/pipelines-azureml/_build/latest?definitionId=6&branchName=master)
+
 # Experiments
 
 ## Infrastructure required for experiments
