@@ -16,7 +16,7 @@ variables:
 steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
-    overrideParameters: 
+    overrideParameters: -tenantId $(tenantId)
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'azrm'
     subscriptionId: $(subscriptionId)

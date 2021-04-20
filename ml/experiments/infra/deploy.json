@@ -8,6 +8,9 @@
     "project": {
       "type": "string"
     },
+    "tenantId": {
+      "type": "securestring"
+    },
     "workspace": {
       "type": "string"
     },
@@ -25,7 +28,7 @@
     "compute1": {
       "type": "object",
       "metadata": {
-        "description": "keys are: name, vmSize, userObjectId, userTenantId and userName"
+        "description": "keys are: name, vmSize, userObjectId, and userName"
       }
     }
   },
@@ -54,7 +57,7 @@
           "personalComputeInstanceSettings": {
             "assignedUser": {
                 "objectId": "[parameters('compute1').userObjectId]",
-                "tenantId": "[parameters('compute1').userTenantId]"
+                "tenantId": "[parameters('tenantId')]"
             }
           }
         }

@@ -11,12 +11,14 @@
     "workspace": {
       "value": "pep1dev"
     },
+    "tenantId": {
+      "value": ""
+    },
     "compute1": {
       "value": {
         "name": "pep1-compute1",
         "vmSize": "Standard_DS12_v2",
-        "userObjectId": "",
-        "userTenantId": "",
+        "userObjectId": "'026e20cd-d5f1-4638-948a-0173a6ee2d15",
         "userName": "auimendoza"
       }
     },
