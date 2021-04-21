@@ -12,10 +12,14 @@ def setup(config, secrets):
   cfg = cfgparser.parse(config, secrets)
 
 if __name__ == '__main__':
+  
   parser = argparse.ArgumentParser(description='Setup workspace datastores')
-  parser.add_argument('--config', type=str, help='json config file')
+  parser.add_argument('--configfile', type=str, help='json config file')
   parser.add_argument('--secrets', type=str, help='map of secrets')
+
   args = parser.parse_args()
-  cfg = args.config
+  
+  cfg = args.configfile
   secrets = args.secrets
+  
   setup(cfg, secrets)
