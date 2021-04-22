@@ -27,7 +27,7 @@ stages:
       inputs:
         overrideParameters: -tenantId $(tenantId)
         deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: $(pipelineServiceConnection)
+        azureResourceManagerConnection: 'azrm-pep-dev-rg'
         subscriptionId: $(subscriptionId)
         action: 'Create Or Update Resource Group'
         resourceGroupName: $(resourceGroup)
