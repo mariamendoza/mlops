@@ -36,12 +36,12 @@ stages:
         csmFile: $(infraArmTemplate)
         csmParametersFile: $(infraArmTemplateParameterFile)
         deploymentMode: 'Incremental'
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: |
-            python $(datastoreSetupPy) -f $(datastoreCfg) -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
-          failOnStderr: true
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          python $(datastoreSetupPy) -f $(datastoreCfg) -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
+        failOnStderr: true
     # - task: PythonScript@0
     #   inputs:
     #     scriptSource: 'filePath'
