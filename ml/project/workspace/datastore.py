@@ -1,15 +1,47 @@
 import argparse
 import json
 import logging
+
+from azureml.core import Datastore, Workspace
 from project.util import CfgParser
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+def is_datastore_exists(workspace, name):
+  try:
+    ds = Datastore.get(workspace, name)
+    return True
+  except HttpOperationError:
+    return False
+
 def setup(config, secrets):
   json_config = json.loads(config)
   cfgparser = CfgParser()
   cfg = cfgparser.parse(config, secrets)
+
+  ws_config = cfg.get("workspace")
+  ws_name = ws_config.get("name")
+  ws_subscription_id = ws_config.get("subscription_id")
+  ws_resource_group = ws_config.get("resource_group")
+
+  ws = Workspace.get(ws_name, 
+                     subscription_id=ws_subscription_id,
+                     resource_group=ws_resource_group)
+
+  datastores = ws_config.get("datastores")
+
+  for ds_config in datastores:
+    ds_name = ds_config.get("name")
+    if not is_datastore_exists(ws, ds_name):
+      ds = Datastore.register_azure_blob_container(
+        workspace=ws,
+        datastore_name=ds_name,
+        account_name=ds_config.get("account_name"),
+        container_name=ds_config.get("container_name"),
+        account_key=ds_config.get("account_key"),
+        create_if_not_exists=ds_config.get("create_if_not_exists")
+      )
 
 if __name__ == '__main__':
   
