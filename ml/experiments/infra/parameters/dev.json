@@ -6,19 +6,19 @@
       "value": "dev"
     },
     "project": {
-      "value": "pep1"
+      "value": "pep"
     },
     "workspace": {
-      "value": "pep1dev"
+      "value": "pepdev"
     },
     "tenantId": {
-      "value": ""
+      "value": "secret"
     },
     "compute1": {
       "value": {
-        "name": "pep1-compute1",
+        "name": "compute1",
         "vmSize": "Standard_DS12_v2",
-        "userObjectId": "'026e20cd-d5f1-4638-948a-0173a6ee2d15",
+        "userObjectId": "secret",
         "userName": "auimendoza"
       }
     },

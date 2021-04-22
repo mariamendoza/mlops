@@ -6,20 +6,20 @@
       "value": "dev"
     },
     "project": {
-      "value": "pep1"
+      "value": "pep"
     },
     "tenantId": {
-      "value": ""
+      "value": "secret"
     },
     "mlWorkspace": {
-      "value": "pep1dev"
+      "value": "pepdev"
     },
     "storageAccount": {
-      "value": "pep1sadev"
+      "value": "taxmlwssadev"
     },
     "keyVault": {
       "value": {
-        "name": "pep1kvdev",
+        "name": "pep-kv-dev",
         "enabledForDeployment": true,
         "enabledForTemplateDeployment": true,
         "enableSoftDelete": true,
@@ -27,7 +27,7 @@
       }
     },
     "appInsights": {
-      "value": "pep1insightsdev"
+      "value": "tax-app-insights-dev"
     }
   }
 }
