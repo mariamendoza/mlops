@@ -1,7 +1,7 @@
 import json
 
 
-Class CfgParser:
+class CfgParser:
   def __init__(self):
     self.secret_pattern = r"\$:(.+)"
 
