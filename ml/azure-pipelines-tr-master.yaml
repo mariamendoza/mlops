@@ -1,36 +1,49 @@
-trigger:
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - ml
-    exclude:
-    - ml/experiments
+# trigger:
+#   branches:
+#     include:
+#     - master
+#   paths:
+#     include:
+#     - ml
+#     exclude:
+#     - ml/experiments
+
+variables:
+- name: infraArmTemplate
+  value: ml/infra/deploy.json
+- name: datastoreCfg
+  value: ml/infra/setup/datastore.cfg
+- name: datastoreSetupPy
+  value: ml/infra/setup/datastore.py
 
 stages:
 - stage: dev
+  variables:
+  - group: mlops-dev
   jobs:
-  # - job: build
-  # - job: unit test
-  - job: deploy
-    variables:
-    - group: mlops-dev
+  - job: infra
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         overrideParameters: -tenantId $(tenantId)
         deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'azrm'
+        azureResourceManagerConnection: $(pipelineServiceConnection)
         subscriptionId: $(subscriptionId)
         action: 'Create Or Update Resource Group'
-        resourceGroupName: 'dp100'
+        resourceGroupName: $(resourceGroup)
         location: 'East US'
         templateLocation: 'Linked artifact'
         csmFile: $(infraArmTemplate)
         csmParametersFile: $(infraArmTemplateParameterFile)
         deploymentMode: 'Incremental'
-        deploymentName: 'test'
+    - task: PythonScript@0
+      inputs:
+        scriptSource: 'filePath'
+        scriptPath: $(datastoreSetupPy)
+        arguments: '--configfile $(datastoreCfg) --secrets "{''subscriptionId'': ''$(subscriptionId)'', ''resourceGroup'': ''$(resourceGroup)'', ''storageAccountKey'': ''$(storageAccountKey)''}"'
+        failOnStderr: true
+  # - job: build
+  # - job: unit test
 
 # - stage: test
 #   jobs:
