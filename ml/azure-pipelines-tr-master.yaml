@@ -1,12 +1,12 @@
-# trigger:
-#   branches:
-#     include:
-#     - master
-#   paths:
-#     include:
-#     - ml
-#     exclude:
-#     - ml/experiments
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - ml
+    exclude:
+    - ml/experiments
 
 variables:
 - name: infraArmTemplate
@@ -36,12 +36,18 @@ stages:
         csmFile: $(infraArmTemplate)
         csmParametersFile: $(infraArmTemplateParameterFile)
         deploymentMode: 'Incremental'
-    - task: PythonScript@0
-      inputs:
-        scriptSource: 'filePath'
-        scriptPath: $(datastoreSetupPy)
-        arguments: '--configfile $(datastoreCfg) --secrets "{''subscriptionId'': ''$(subscriptionId)'', ''resourceGroup'': ''$(resourceGroup)'', ''storageAccountKey'': ''$(storageAccountKey)''}"'
-        failOnStderr: true
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            python $(datastoreSetupPy) -f $(datastoreCfg) -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
+          failOnStderr: true
+    # - task: PythonScript@0
+    #   inputs:
+    #     scriptSource: 'filePath'
+    #     scriptPath: $(datastoreSetupPy)
+    #     arguments: '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
+    #     failOnStderr: true
   # - job: build
   # - job: unit test
 

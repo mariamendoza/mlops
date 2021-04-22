@@ -3,7 +3,7 @@ import json
 import logging
 
 from azureml.core import Datastore, Workspace
-from project.util import CfgParser
+from project.util.cfgparser import CfgParser
 
 # logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 # logger = logging.getLogger(__name__)
@@ -19,14 +19,15 @@ def register_datastore(workspace, datastore_config):
   ds_name = ds_config.get("name")
 
   if not is_datastore_exists(ws, ds_name):
-    Datastore.register_azure_blob_container(
-      workspace=ws,
-      datastore_name=ds_name,
-      account_name=ds_config.get("account_name"),
-      container_name=ds_config.get("container_name"),
-      account_key=ds_config.get("account_key"),
-      create_if_not_exists=ds_config.get("create_if_not_exists")
-    )
+    print(datastore_config)
+    # Datastore.register_azure_blob_container(
+    #   workspace=ws,
+    #   datastore_name=ds_name,
+    #   account_name=ds_config.get("account_name"),
+    #   container_name=ds_config.get("container_name"),
+    #   account_key=ds_config.get("account_key"),
+    #   create_if_not_exists=ds_config.get("create_if_not_exists")
+    # )
 
 def get_workspace(config):
   ws_config = cfg.get("workspace")
@@ -54,12 +55,14 @@ def setup(config, secrets):
 if __name__ == '__main__':
   
   parser = argparse.ArgumentParser(description='Setup workspace datastores')
-  parser.add_argument('--configfile', type=str, help='json config file')
-  parser.add_argument('--secrets', type=str, help='map of secrets')
+  parser.add_argument('-f', type=str, dest="configfile", help='json config file', required=True)
+  parser.add_argument('-s', type=str, dest="secrets", help='map of secrets', default={})
 
   args = parser.parse_args()
   
   cfg = args.configfile
   secrets = args.secrets
+
+  print(json.loads(secrets))
   
   setup(cfg, secrets)
