@@ -3,29 +3,28 @@ trigger:
     include:
     - master
   paths:
-    include:
-    - ml
     exclude:
-    - ml/experiments
+    - experiments
 
 variables:
 - name: infraArmTemplate
-  value: ml/infra/deploy.json
-- name: datastoreCfg
-  value: ml/infra/setup/datastore.cfg
-- name: datastoreSetupPy
-  value: ml/infra/setup/datastore.py
+  value: infra/deploy.json
+- name: keyVaultTenantId
+  value: 3d2eac2c-81ec-4951-b44e-e8e628a011b9
 
 stages:
 - stage: dev
   variables:
   - group: mlops-dev
+  - name: infraArmTemplateParameterFile
+    value: infra/parameters/dev.json
   jobs:
   - job: infra
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
+      displayName: 'Create ML orkspace'
       inputs:
-        overrideParameters: -tenantId $(tenantId)
+        overrideParameters: -tenantId $(keyVaultTenantId)
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'azrm-pep-dev-rg'
         subscriptionId: $(subscriptionId)
@@ -37,10 +36,17 @@ stages:
         csmParametersFile: $(infraArmTemplateParameterFile)
         deploymentMode: 'Incremental'
     - task: Bash@3
+      displayName: 'Setup Datastores'
       inputs:
         targetType: 'inline'
         script: |
-          python $(datastoreSetupPy) -f $(datastoreCfg) -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
+          pip install -r requirements.txt
+          python infra/setup/datastore.py -f infra/setup/datastore.cfg \
+            -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", \
+                 "storageAccountKey":"$(storageAccountKey)", \
+                 "saSubscriptionId": "$(saSubscriptionId)", \
+                 "saResourceGroup": "$(saResourceGroup)" \
+                }'
         failOnStderr: true
     # - task: PythonScript@0
     #   inputs:
