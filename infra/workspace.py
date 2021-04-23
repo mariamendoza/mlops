@@ -20,14 +20,14 @@ def register_datastore(workspace, ds_config):
   ds_name = ds_config.get("name")
 
   if not is_datastore_exists(workspace, ds_name):
-    # Datastore.register_azure_blob_container(
-    #   workspace=ws,
-    #   datastore_name=ds_name,
-    #   account_name=ds_config.get("account_name"),
-    #   container_name=ds_config.get("container_name"),
-    #   account_key=ds_config.get("account_key"),
-    #   create_if_not_exists=ds_config.get("create_if_not_exists")
-    # )
+    Datastore.register_azure_blob_container(
+      workspace=workspace,
+      datastore_name=ds_name,
+      account_name=ds_config.get("account_name"),
+      container_name=ds_config.get("container_name"),
+      account_key=ds_config.get("account_key"),
+      create_if_not_exists=ds_config.get("create_if_not_exists")
+    )
 
 def get_workspace(config):
   ws_config = config.get("workspace")
