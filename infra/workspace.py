@@ -3,6 +3,7 @@ import json
 import logging
 
 from azureml.core import Datastore, Workspace
+from azureml.core.authentication import MsiAuthentication
 from project.util.cfgparser import CfgParser
 from msrest.exceptions import HttpOperationError
 
@@ -35,9 +36,11 @@ def get_workspace(config):
   ws_subscription_id = ws_config.get("subscription_id")
   ws_resource_group = ws_config.get("resource_group")
 
+  msi_auth = MsiAuthentication()
   ws = Workspace.get(ws_name, 
                      subscription_id=ws_subscription_id,
-                     resource_group=ws_resource_group)
+                     resource_group=ws_resource_group,
+                     auth=msi_auth)
 
   return ws
 
