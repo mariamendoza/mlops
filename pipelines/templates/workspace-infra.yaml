@@ -26,7 +26,7 @@ jobs:
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: 'Create ML Workspace'
     inputs:
-      overrideParameters: -tenantId ${{parameter.tenantId}}
+      overrideParameters: -tenantId ${{parameters.tenantId}}
       deploymentScope: 'Resource Group'
       azureResourceManagerConnection: ${{parameters.serviceConnection}} #'azrm-pep-dev-rg'
       subscriptionId: ${{parameters.subscriptionId}}
