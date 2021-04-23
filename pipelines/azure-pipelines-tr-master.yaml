@@ -29,6 +29,8 @@ stages:
       infraArmTemplate: $(infraArmTemplate)
       infraArmTemplateParameterFile: $(infraArmTemplateParameterFile)
       workspaceSetupSecretsMap: '{"storageAccountKey":"$(storageAccountKey)"}'
+      mlServicePrincipalId: $(mlServicePrincipalId)
+      mlServicePrincipalSecret: $(mlServicePrincipalSecret)
   # - job: build
   # - job: unit test
 

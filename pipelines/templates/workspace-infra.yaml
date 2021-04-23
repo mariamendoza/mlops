@@ -15,6 +15,10 @@ parameters:
   type: string
 - name: workspaceSetupSecretsMap
   type: string
+- name: mlServicePrincipalId
+  type: string
+- name: mlServicePrincipalSecret
+  type: string
 
 jobs:
 - job: infra
@@ -41,3 +45,6 @@ jobs:
     displayName: "Setup ML Workspace"
     env:
       PYTHONPATH: $(Build.SourcesDirectory)
+      TENANT_ID: ${{parameters.tenantId}}
+      SERVICE_PRINCIPAL_ID: ${{parameters.mlServicePrincipalId}}
+      SERVICE_PRINCIPAL_SECRET: ${{parameters.mlServicePrincipalSecret}}
