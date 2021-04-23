@@ -1,5 +1,5 @@
 import json
-
+import re
 
 class CfgParser:
   def __init__(self):
@@ -17,9 +17,28 @@ class CfgParser:
       dict: config with secrets applied
     """
 
-    new_config = {}
-    for k, v in config.items():
-      secret = re.findall(self.secret_pattern, v)[0]
-      new_config[k] = secrets.get(secret) or v
+    if isinstance(config, list):
+      items = []
+      
+      for item in config:
+        parsed = self.parse(item, secrets)
+        items.append(parsed)
+      
+      return items
 
-    return new_config
+    elif isinstance(config, dict):
+      new_config = {}
+
+      for k, v in config.items():
+        parsed = self.parse(v, secrets)
+      
+        if v == parsed:
+          secret = next(iter(re.findall(self.secret_pattern, v)), None)
+          new_config[k] = secrets.get(secret) or v
+        else:
+          new_config[k] = parsed
+
+      return new_config
+
+    else:
+      return config
