@@ -9,7 +9,7 @@ trigger:
 variables:
 - name: infraArmTemplate
   value: infra/deploy.json
-- name: keyVaultTenantId
+- name: tenantId
   value: 3d2eac2c-81ec-4951-b44e-e8e628a011b9
 
 stages:
