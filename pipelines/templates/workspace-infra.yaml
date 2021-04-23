@@ -26,16 +26,16 @@ jobs:
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: 'Create ML Workspace'
     inputs:
-      overrideParameters: -tenantId $(tenantId)
+      overrideParameters: -tenantId ${{parameter.tenantId}}
       deploymentScope: 'Resource Group'
-      azureResourceManagerConnection: $(serviceConnection) #'azrm-pep-dev-rg'
-      subscriptionId: $(subscriptionId)
+      azureResourceManagerConnection: ${{parameters.serviceConnection}} #'azrm-pep-dev-rg'
+      subscriptionId: ${{parameters.subscriptionId}}
       action: 'Create Or Update Resource Group'
-      resourceGroupName: $(resourceGroup)
-      location: $(location)
+      resourceGroupName: ${{parameters.resourceGroup}}
+      location: ${{parameters.location}}
       templateLocation: 'Linked artifact'
-      csmFile: $(infraArmTemplate)
-      csmParametersFile: $(infraArmTemplateParameterFile)
+      csmFile: ${{parameters.infraArmTemplate}}
+      csmParametersFile: ${{parameters.infraArmTemplateParameterFile}}
       deploymentMode: 'Incremental'
   - task: UsePythonVersion@0
     displayName: 'Use Python Version: $(pythonVersion)'
@@ -45,5 +45,5 @@ jobs:
       architecture: 'x64'
   - script: |
       pip install -r requirements.txt
-      python infra/workspace.py -f infra/config/workspace.cfg -s '$(workspaceSetupSecretsMap)'
+      python infra/workspace.py -f infra/config/workspace.cfg -s '${{parameters.workspaceSetupSecretsMap}}'
     displayName: "Setup ML Workspace"
