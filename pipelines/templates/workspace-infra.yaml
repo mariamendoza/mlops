@@ -39,3 +39,5 @@ jobs:
       pip install -r requirements.txt
       python infra/workspace.py -f infra/config/workspace.cfg -s '${{parameters.workspaceSetupSecretsMap}}'
     displayName: "Setup ML Workspace"
+    env:
+      PYTHONPATH: $(Build.SourcesDirectory)
