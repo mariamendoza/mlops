@@ -1,3 +1,3 @@
-azure-core
+azureml-core
 pandas
 numpy
