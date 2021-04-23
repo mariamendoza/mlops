@@ -20,8 +20,6 @@ jobs:
 - job: infra
   pool:
     vmImage: 'ubuntu-latest'
-  variables:
-    pythonVersion: 3.6.9
   steps:
   - task: AzureResourceManagerTemplateDeployment@3
     displayName: 'Create ML Workspace'
@@ -37,12 +35,6 @@ jobs:
       csmFile: ${{parameters.infraArmTemplate}}
       csmParametersFile: ${{parameters.infraArmTemplateParameterFile}}
       deploymentMode: 'Incremental'
-  - task: UsePythonVersion@0
-    displayName: 'Use Python Version: $(pythonVersion)'
-    inputs:
-      versionSpec: '$(pythonVersion)'
-      addToPath: true
-      architecture: 'x64'
   - script: |
       pip install -r requirements.txt
       python infra/workspace.py -f infra/config/workspace.cfg -s '${{parameters.workspaceSetupSecretsMap}}'
