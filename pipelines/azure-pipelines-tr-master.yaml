@@ -12,17 +12,17 @@ variables:
 
 stages:
 - stage: dev
+
   variables:
   - group: mlops-dev
   - name: infraArmTemplateParameterFile
     value: infra/config/deploy.parameters.dev.json
-  - name: serviceConnection
-    value: azrm-pep-dev-rg
+
   jobs:
   - template: templates/workspace-infra.yaml
     parameters:
       tenantId: $(tenantId)
-      serviceConnection: $(serviceConnection)
+      serviceConnection: azrm-pep-dev-rg
       subscriptionId: $(subscriptionId)
       resourceGroup: $(resourceGroup)
       location: $(location)
