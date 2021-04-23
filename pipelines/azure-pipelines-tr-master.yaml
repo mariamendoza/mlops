@@ -21,7 +21,6 @@ stages:
   jobs:
   - template: templates/workspace-infra.yaml
     parameters:
-      environmentName: 'DEV'
       tenantId: $(tenantId)
       serviceConnection: $(serviceConnection)
       subscriptionId: $(subscriptionId)
