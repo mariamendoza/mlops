@@ -1,0 +1,49 @@
+parameters:
+- name: tenantId
+  type: string
+- name: serviceConnection
+  type: string
+- name: subscriptionId
+  type: string
+- name: resourceGroup
+  type: string
+- name: location
+  type: string
+- name: infraArmTemplate
+  type: string
+- name: infraArmTemplateParameterFile
+  type: string
+- name: workspaceSetupSecretsMap
+  type: string
+
+jobs:
+- job: infra
+  pool:
+    vmImage: 'ubuntu-latest'
+  variables:
+    pythonVersion: 3.6.9
+  steps:
+  - task: AzureResourceManagerTemplateDeployment@3
+    displayName: 'Create ML Workspace'
+    inputs:
+      overrideParameters: -tenantId $(tenantId)
+      deploymentScope: 'Resource Group'
+      azureResourceManagerConnection: $(serviceConnection) #'azrm-pep-dev-rg'
+      subscriptionId: $(subscriptionId)
+      action: 'Create Or Update Resource Group'
+      resourceGroupName: $(resourceGroup)
+      location: $(location)
+      templateLocation: 'Linked artifact'
+      csmFile: $(infraArmTemplate)
+      csmParametersFile: $(infraArmTemplateParameterFile)
+      deploymentMode: 'Incremental'
+  - task: UsePythonVersion@0
+    displayName: 'Use Python Version: $(pythonVersion)'
+    inputs:
+      versionSpec: '$(pythonVersion)'
+      addToPath: true
+      architecture: 'x64'
+  - script: |
+      pip install -r requirements.txt
+      python infra/workspace.py -f infra/config/workspace.cfg -s '$(workspaceSetupSecretsMap)'
+    displayName: "Setup ML Workspace"

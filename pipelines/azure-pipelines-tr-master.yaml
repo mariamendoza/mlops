@@ -9,51 +9,27 @@ trigger:
 variables:
 - name: infraArmTemplate
   value: infra/deploy.json
-- name: tenantId
-  value: 3d2eac2c-81ec-4951-b44e-e8e628a011b9
 
 stages:
 - stage: dev
   variables:
   - group: mlops-dev
   - name: infraArmTemplateParameterFile
-    value: infra/parameters/dev.json
+    value: infra/config/deploy.parameters.dev.json
+  - name: serviceConnection
+    value: azrm-pep-dev-rg
   jobs:
-  - job: infra
-    steps:
-    - task: AzureResourceManagerTemplateDeployment@3
-      displayName: 'Create ML orkspace'
-      inputs:
-        overrideParameters: -tenantId $(keyVaultTenantId)
-        deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'azrm-pep-dev-rg'
-        subscriptionId: $(subscriptionId)
-        action: 'Create Or Update Resource Group'
-        resourceGroupName: $(resourceGroup)
-        location: 'East US'
-        templateLocation: 'Linked artifact'
-        csmFile: $(infraArmTemplate)
-        csmParametersFile: $(infraArmTemplateParameterFile)
-        deploymentMode: 'Incremental'
-    - task: Bash@3
-      displayName: 'Setup Datastores'
-      inputs:
-        targetType: 'inline'
-        script: |
-          pip install -r requirements.txt
-          python infra/setup/datastore.py -f infra/setup/datastore.cfg \
-            -s '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", \
-                 "storageAccountKey":"$(storageAccountKey)", \
-                 "saSubscriptionId": "$(saSubscriptionId)", \
-                 "saResourceGroup": "$(saResourceGroup)" \
-                }'
-        failOnStderr: true
-    # - task: PythonScript@0
-    #   inputs:
-    #     scriptSource: 'filePath'
-    #     scriptPath: $(datastoreSetupPy)
-    #     arguments: '{"subscriptionId":"$(subscriptionId)", "resourceGroup":"$(resourceGroup)", "storageAccountKey":"$(storageAccountKey)"}'
-    #     failOnStderr: true
+  - template: templates/workspace-infra.yaml
+    parameters:
+      environmentName: 'DEV'
+      tenantId: $(tenantId)
+      serviceConnection: $(serviceConnection)
+      subscriptionId: $(subscriptionId)
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      infraArmTemplate: $(infraArmTemplate)
+      infraArmTemplateParameterFile: $(infraArmTemplateParameterFile)
+      workspaceSetupSecretsMap: '{"storageAccountKey":"$(storageAccountKey)"}'
   # - job: build
   # - job: unit test
 
