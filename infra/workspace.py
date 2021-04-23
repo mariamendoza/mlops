@@ -41,7 +41,12 @@ def get_workspace(config):
 
   return ws
 
-def setup(config, secrets):
+def setup(configfile, secrets):
+
+  with open(configfile, 'r') as f:
+    config = f.readlines()
+    
+  config = ''.join(config)
   json_config = json.loads(config)
   cfgparser = CfgParser()
   cfg = cfgparser.parse(config, secrets)
