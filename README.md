@@ -37,15 +37,17 @@ Container Registry is an optional component in an MLOps project. It will be need
 
 Azure ML Workspace is needed on all environments dev, qa and prod. Dev is primarily for experimentation and training. QA and Prod are primarily for serving preprocessing (optional) and scoring endpoints. All environments should have access to raw data sources that have PROD-quality data. If these data sources are found in prod storage accounts, or storage accounts in other resource groups or subscriptions, then these storage accounts must be added as a datastore in Azure ML Workspace.
 
+### Dev Workspace
+
 ![](docs/images/AzureML-dev.png)
 
 In the dev workspace, experiments are conducted in compute instances to provide sufficient resources for processing data in a small to medium scale. Large scale data processing and training run on compute clusters. Pipelines with endpoints can be setup to allow triggering of these pipelines from within experiments or within cicd pipelines. Scoring pipelines can be deployed in dev for the purpose of testing.
 
-### Dev pipelines
+#### Dev pipelines
 
 1. Preprocessing 
 
-    Preprocessing pipeline can be used to implement any processing required to take raw data into a data set ready to be passed to the training pipeline. Basically, this is the pipeline responsible for feature engineering. Make sure datasets generated are stored in the default datastore and registered.
+    Preprocessing pipeline can be used to implement any processing required to take raw data and transform it into a data set ready to be passed to the training pipeline. Basically, this is the pipeline responsible for feature engineering. Make sure datasets generated are stored in the default datastore and registered.
 
 2. Training 
     
@@ -58,6 +60,8 @@ In the dev workspace, experiments are conducted in compute instances to provide 
 4. Scoring
 
     Scoring pipeline is the pipeline that is used to predict. Scoring pipeline uses a registered model that is tagged for deployment.
+
+### QA and Prod Workspace
 
 ![](docs/images/AzureML-qa-prod.png)
 
