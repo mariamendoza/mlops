@@ -5,6 +5,8 @@ trigger:
   paths:
     exclude:
     - experiments
+    - docs
+    - *.md
 
 variables:
 - name: infraArmTemplate
