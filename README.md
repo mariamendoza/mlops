@@ -67,7 +67,67 @@ In the dev workspace, experiments are conducted in compute instances to provide 
 
 QA and PROD environments are setup to include preprocessing and scoring pipelines only. Preprocessing pipelines are optional and is necessary only if client will need a way to format its raw data to a form acceptable to the model in the scoring pipeline. Datastores are defined as needed.
 
+## Repository Directory Structure
+
+  Documentation
+
+    ├── README.md
+    ├── docs
+    │   └── images
+
+  Experiments
+
+    ├── experiments
+    │   ├── README.md
+    │   └── notebooks
+    │       └── Untitled.ipynb
+
+  Infrastructure-as-code
+
+    ├── infra
+    │   ├── config
+    │   │   ├── deploy.parameters.dev.json
+    │   │   ├── deploy.parameters.prod.json
+    │   │   ├── deploy.parameters.qa.json
+    │   │   └── workspace.cfg
+    │   ├── deploy.json
+    │   └── workspace.py
+  
+  Integration test scripts
+
+    ├── integration_test
+    │   └── test.py
+
+
+  CI/CD pipelines
+
+    ├── pipelines
+    │   ├── azure-pipelines-pr-master.yaml
+    │   ├── azure-pipelines-tr-master.yaml
+    │   └── templates
+    │       └── workspace-infra.yaml
+
+  Python modules for project
+
+    ├── project
+    │   ├── pipeline
+    │   │   ├── preprocessing
+    │   │   ├── score
+    │   │   └── train
+    │   └── util
+    │       ├── auth.py
+    │       └── cfgparser.py
+    └──requirements.txt
+
+  Unit Tests for Python modules
+
+    └── test
+        ├── pipeline
+        │   ├── preprocessing
+        │   ├── score
+        │   └── train
+        └── util
+
 ## DevOps Process
 
 
-## Repository Structurels
