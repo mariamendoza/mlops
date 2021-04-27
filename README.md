@@ -136,7 +136,7 @@ QA and PROD environments are setup to include preprocessing and scoring pipeline
 
 ### On merge to master
 
-Stage: dev
+**Stage: dev**
 - Infra Setup
   - Run `infra/deploy.json` as deployment with RunOnce strategy
   - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
@@ -151,7 +151,7 @@ Stage: dev
   - Run scoring pipeline test
 - Manual approval gate
 
-Stage: qa
+**Stage: qa**
 - Infra Setup
   - Run `infra/deploy.json` as deployment with RunOnce strategy
   - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
@@ -160,7 +160,7 @@ Stage: qa
   - Submit requests to pipelines and validate
 - Manual approval gate
 
-Stage: prod
+**Stage: prod**
 - Infra Setup
   - Run `infra/deploy.json` as deployment with RunOnce strategy
   - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
