@@ -107,7 +107,7 @@ QA and PROD environments are setup to include preprocessing and scoring pipeline
     │   └── templates
     │       └── workspace-infra.yaml
 
-  Python modules for project
+  Python package for project
 
     ├── project
     │   ├── pipeline
@@ -119,7 +119,7 @@ QA and PROD environments are setup to include preprocessing and scoring pipeline
     │       └── cfgparser.py
     └──requirements.txt
 
-  Unit Tests for Python modules
+  Unit tests for Python package modules
 
     └── test
         ├── pipeline
@@ -128,6 +128,43 @@ QA and PROD environments are setup to include preprocessing and scoring pipeline
         │   └── train
         └── util
 
-## DevOps Process
+## CI/CD Process
 
+### On PR to master
+- Run unit tests
+- Optional, run linting
 
+### On merge to master
+
+Stage: dev
+- Infra Setup
+  - Run `infra/deploy.json` as deployment with RunOnce strategy
+  - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
+- Build python package
+- Build run configs and environments
+- Deploy pipelines 
+- Manual steps
+  - Run preprocessing pipeline
+  - Run training pipeline
+  - Run evaluation pipeline
+  - Register if best model is better than previous, tag: dev, version: latest
+  - Run scoring pipeline test
+- Manual approval gate
+
+Stage: qa
+- Infra Setup
+  - Run `infra/deploy.json` as deployment with RunOnce strategy
+  - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
+- Deploy pipelines using build artifacts
+- Run integration tests
+  - Submit requests to pipelines and validate
+- Manual approval gate
+
+Stage: prod
+- Infra Setup
+  - Run `infra/deploy.json` as deployment with RunOnce strategy
+  - Run `infra/workspace.py` to make changes to workspace resources such as datastores.
+- Deploy pipelines using build artifacts
+
+Note:
+- PRs and triggers should exclude `experiments` and `docs` subdirectories.
