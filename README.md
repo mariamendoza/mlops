@@ -1,6 +1,8 @@
 [![Build Status](https://dev.azure.com/auimendoza/pipelines-azureml/_apis/build/status/mlops?branchName=master)](https://dev.azure.com/auimendoza/pipelines-azureml/_build/latest?definitionId=3&branchName=master)
 
-## Azure ML MLOps
+# MLOps
+
+## Azure ML Workspace
 
 ### Required resources:
 
@@ -31,10 +33,19 @@ Application Insights allows monitoring of applications running inside containers
 
 Container Registry is an optional component in an MLOps project. It will be needed only when the ml ops process requires creating its own custom container image. Container registry can be shared.
 
+## Azure ML Workspace Architecture
+
+Azure ML Workspace is needed on all environments dev, qa and prod. Dev is primarily for experimentation and training. QA and Prod are primarily for serving preprocessing (optional) and scoring endpoints. All environments should have access to raw data sources that have PROD-quality data. If these data sources are found in prod storage accounts, or storage accounts in other resource groups or subscriptions, then these storage accounts must be added as a datastore in Azure ML Workspace.
+
+![](docs/images/AzureML-dev.png)
+
+In the dev workspace, experiments are conducted in compute instances to provide sufficient resources for processing data in a small to medium scale. Large scale data processing and training run on compute clusters. Pipelines with endpoints can be setup to allow triggering of these pipelines from within experiments or within cicd pipelines. Scoring pipelines can be deployed in dev for the purpose of testing.
+
+![](docs/images/AzureML-qa-prod.png)
+
+QA and PROD environments are setup to include preprocessing and scoring pipelines only. Preprocessing pipelines are optional and is necessary only if client will need a way to format its raw data to a form acceptable to the model in the scoring pipeline. Datastores are defined as needed.
+
 ## DevOps Process
 
-[](docs/images/AzureML-dev.png)
 
-()[docs/images/AzureML-qa-prod.png]
-
-## Repository Structure
+## Repository Structurels
