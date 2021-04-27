@@ -35,6 +35,6 @@ Container Registry is an optional component in an MLOps project. It will be need
 
 [](docs/images/AzureML-dev.png)
 
-[](docs/images/AzureML-qa-prod.png)
+()[docs/images/AzureML-qa-prod.png]
 
 ## Repository Structure
