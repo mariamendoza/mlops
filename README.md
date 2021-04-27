@@ -41,6 +41,24 @@ Azure ML Workspace is needed on all environments dev, qa and prod. Dev is primar
 
 In the dev workspace, experiments are conducted in compute instances to provide sufficient resources for processing data in a small to medium scale. Large scale data processing and training run on compute clusters. Pipelines with endpoints can be setup to allow triggering of these pipelines from within experiments or within cicd pipelines. Scoring pipelines can be deployed in dev for the purpose of testing.
 
+### Dev pipelines
+
+1. Preprocessing 
+
+    Preprocessing pipeline can be used to implement any processing required to take raw data into a data set ready to be passed to the training pipeline. Basically, this is the pipeline responsible for feature engineering. Make sure datasets generated are stored in the default datastore and registered.
+
+2. Training 
+    
+    Training pipeline can be used to implement training using multiple algorithms and parameters (hyperparameter tuning). Make sure to use Azure ML SDK to properly register experiments, pipeline runs and logging metrics and plots generated. Models generated should be registered.
+
+3. Evaluation 
+
+    Evaluation pipeline can be used to compare different models generated during an experiment and select the best model. The best model selected by this pipeline can then be used as an input to the scoring pipeline.
+
+4. Scoring
+
+    Scoring pipeline is the pipeline that is used to predict. Scoring pipeline uses a registered model that is tagged for deployment.
+
 ![](docs/images/AzureML-qa-prod.png)
 
 QA and PROD environments are setup to include preprocessing and scoring pipelines only. Preprocessing pipelines are optional and is necessary only if client will need a way to format its raw data to a form acceptable to the model in the scoring pipeline. Datastores are defined as needed.
