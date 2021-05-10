@@ -1,0 +1,2 @@
+azureml-core==1.27.0
+pytest==6.2.4
