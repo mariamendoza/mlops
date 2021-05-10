@@ -1,0 +1,27 @@
+{ "workspace":
+  {
+    "name": "workspace_name",
+    "subscription_id": "workspace_subscription_id",
+    "resource_group": "workspace_resource_group",
+    "datastores": [
+      {
+        "name": "datastore1",
+        "container_name": "container1",
+        "account_name": "storage_account_name1",
+        "account_key": "$:storageAccountKey",
+        "subscription_id": "subscription_id",
+        "resource_group": "resource_group",
+        "create_if_not_exists": "True"
+      },
+      {
+        "name": "datastore2",
+        "container_name": "container2",
+        "account_name": "storage_account_name2",
+        "account_key": "$:storageAccountKey",
+        "subscription_id": "subscription_id",
+        "resource_group": "resource_group",
+        "create_if_not_exists": "True"
+      }
+    ]
+  }
+}
