@@ -1,10 +1,88 @@
 import argparse
-import os
+import json
 from azureml.core import Dataset
+from azureml.core import Model
+from azureml.core.datastore import Datastore
 from functools import wraps
 from mlops.util.decorators import mlrun
 
 class StepArgParser():
+
+    ARG_TYPE_NAMED_INPUT = "named_input"
+    ARG_TYPE_PIPELINE_DATA = "pipeline_data"
+    ARG_TYPE_REG_DATASET = "registered_dataset"
+    ARG_TYPE_REG_MODEL = "registered_model"
+    ARG_TYPE_NAMED_INPUT_KEY = "named_input_key"
+
+    INPUT_ARGS = {
+        ARG_TYPE_NAMED_INPUT: {
+            "flag": "-n",
+            "type": str,
+            "dest": "input_datasets",
+            "help": "Input Dataset object",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_PIPELINE_DATA: {
+            "flag": "-p",
+            "type": str,
+            "dest": "input_pipeline_data_dirs",
+            "help": "Input PipelineData directory",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_REG_DATASET: {
+            "flag": "-d",
+            "type": str,
+            "dest": "input_reg_datasets",
+            "help": "Input registered dataset",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_REG_MODEL: {
+            "flag": "-m",
+            "type": str,
+            "dest": "input_reg_models",
+            "help": "Input registered model",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_NAMED_INPUT_KEY:{
+            "flag": "-i",
+            "type": str,
+            "dest": "named_input_keys",
+            "help": "Named input label",
+            "required": False,
+            "action": 'append'
+        }
+    }
+
+    OUTPUT_ARGS = {
+        ARG_TYPE_PIPELINE_DATA: {
+            "flag": "-P",
+            "type": str,
+            "dest": "output_pipeline_data_dirs",
+            "help": "Output PipelineData directory",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_REG_DATASET: {
+            "flag": "-D",
+            "type": str,
+            "dest": "output_reg_datasets",
+            "help": "Output registered dataset",
+            "required": False,
+            "action": 'append'
+        },
+        ARG_TYPE_REG_MODEL: {
+            "flag": "-M",
+            "type": str,
+            "dest": "output_reg_models",
+            "help": "Output registered model",
+            "required": False,
+            "action": 'append'
+        }
+    }
 
     def __init__(self, description=None):
         self.description = description
@@ -12,19 +90,14 @@ class StepArgParser():
     def parse_args(self):
 
         parser = argparse.ArgumentParser(description=self.description)
-        parser.add_argument('-d', type=str, dest="dataset", 
-                            help='Azure ML dataset', 
-                            required=True)
-        parser.add_argument('-i', type=str, dest="input_name", 
-                            help='Dataset as named input name', 
-                            required=True)
-        parser.add_argument('-o', type=str, dest="output_dir",
-                            help='Output directory',
-                            required=False)
-        parser.add_argument('-n', type=str, dest="output_dataset_name",
-                            help="Register output as dataset with name",
-                            required=False)
-        
+
+        for args in [self.INPUT_ARGS, self.OUTPUT_ARGS]:
+            for k, v in args.items():
+                v_args = v.copy()
+                first_arg = v_args.pop("flag")
+
+                parser.add_argument(first_arg, **v_args)
+
         return parser.parse_args()
         
 
@@ -33,22 +106,23 @@ class StepDecorator():
     OUTPUT_FORMAT = "parquet"
 
     def __init__(self, 
-                 input_name, 
-                 output_dir=None, 
-                 output_dataset_name=None,
-                 output_file_basename=None, 
-                 output_dataset_description=None,
-                 output_dataset_tags={}):
+                 input_datasets=[],
+                 named_input_keys=[],
+                 input_pipeline_data_dirs=[],
+                 input_reg_datasets=[],
+                 input_reg_models=[],
+                 output_pipeline_data_dirs=[],
+                 output_reg_datasets=[],
+                 output_reg_models=[]):
 
-        self.input_name = input_name
-        self.output_dir = output_dir
-        self.output_dataset_name = output_dataset_name
-
-        self.output_file_basename = output_file_basename
-        self.output_filename = f"{self.output_file_basename}.{self.OUTPUT_FORMAT}"
-
-        self.output_dataset_description = output_dataset_description
-        self.output_dataset_tags = output_dataset_tags
+        self.input_datasets = input_datasets
+        self.named_input_keys = named_input_keys
+        self.input_pipeline_data_dirs = list(map(lambda x: json.loads(x), input_pipeline_data_dirs or []))
+        self.input_reg_datasets = list(map(lambda x: json.loads(x), input_reg_datasets or []))
+        self.input_reg_models = list(map(lambda x: json.loads(x), input_reg_models or []))
+        self.output_pipeline_data_dirs = list(map(lambda x: json.loads(x), output_pipeline_data_dirs or []))
+        self.output_reg_datasets = list(map(lambda x: json.loads(x), output_reg_datasets or []))
+        self.output_reg_models = list(map(lambda x: json.loads(x), output_reg_models or []))
 
     def __call__(self, func):
         
@@ -56,36 +130,88 @@ class StepDecorator():
         @wraps(func)
         def inner(*args, **kwargs):
             run = kwargs.get("run")
-            df = run.input_datasets[self.input_name].to_pandas_dataframe()
-            kwargs["df"] = df
-            output_df = func(*args, **kwargs)
+            ws = run.experiment.workspace
 
-            if self.output_dir:
-                os.makedirs(self.output_dir, exist_ok=True)
-                output_file_path = os.path.join(self.output_dir, self.output_filename)
+            def register_model(model_name, model_path):
+                model_config = list(filter(lambda x: x["name"] == model_name, self.output_reg_models))[0]
+                
+                tags = model_config.get("tags")
+                description = model_config.get("description")
 
-                output_df.to_parquet(output_file_path, index=False)
+                Model.register(workspace=ws, model_path=model_path, model_name=model_name, tags=tags, description=description)
 
-            if self.output_dataset_name:
-                ws = run.experiment.workspace
-                ds = ws.get_default_datastore()
+            def register_dataset(dataset_name, dataframe):
+                dataset_config = list(filter(lambda x: x["name"] == dataset_name, self.output_reg_datasets))[0]
+                
+                datastore = dataset_config.get("datastore") or "default"
+                description = dataset_config.get("description")
+                tags = dataset_config.get("tags")
 
-                target_path = f'experiment/{run.experiment.name}/run/{run.number}/out/{self.output_filename}'
+                if datastore == "default":
+                    ds = ws.get_default_datastore()
+                else:
+                    ds = Datastore.get(workspace=ws, datastore_name=datastore)
+
+                target_path = f'experiment/{run.experiment.name}/run/{run.number}/out/{dataset_name}'
 
                 default_output_dataset_tags = {
-                    "format": self.OUTPUT_FORMAT,
+                    "format": self.OUTPUT_FORMAT,  # Dataset.Tabular.register_pandas_dataframe always writes a parquet
                     "experiment": run.experiment.name,
                     "run": run.number
                 }
 
-                output_dataset_tags = {**default_output_dataset_tags, **self.output_dataset_tags}
+                output_dataset_tags = {**default_output_dataset_tags, **tags}
                 
-                output_dataset = Dataset.Tabular.register_pandas_dataframe(
-                    output_df, 
+                Dataset.Tabular.register_pandas_dataframe(
+                    dataframe, 
                     target=(ds, target_path), 
-                    name=self.output_dataset_name, 
-                    description=self.output_dataset_description,
+                    name=dataset_name, 
+                    description=description,
                     tags=output_dataset_tags
                 )
+
+            dataframes = {}
+            for i, d in enumerate(self.input_datasets or []):
+                dkey = self.named_input_keys[i]
+                dataframes[dkey] = run.input_datasets[dkey].to_pandas_dataframe()
+            
+            for d in self.input_reg_datasets or []:
+                dkey = d["key"]
+                dname = d["name"]
+                dver = d.get("version")
+                if dver == "latest":
+                    dver = None
+
+                dataframes[dkey] = Dataset.get_by_name(ws, name=dname, version=dver).to_pandas_dataframe()
+
+            kwargs["dataframes"] = dataframes
+
+            models = {}
+            for m in self.input_reg_models or []:
+                mkey = m["key"]
+                mname = m["name"]
+                mver = m.get("version")
+                if mver == "latest":
+                    mver = None
+
+                models[mkey] = Model.get_model_path(model_name=mname, version=mver, _workspace=ws)
+            
+            kwargs["models"] = models
+
+            pipeline_data_dirs = []
+            for p in self.input_pipeline_data_dirs or []:
+                pipeline_data_dirs.append(p["name"])
+
+            kwargs["pipeline_data_dirs"] = pipeline_data_dirs
+
+            register_dataframes, register_models = func(*args, **kwargs)
+
+            for k in register_dataframes or {}:
+                v = register_dataframes[k]
+                register_dataset(dataset_name=k, dataframe=v)
+
+            for k in register_models or {}:
+                v = register_models[k]
+                register_model(model_name=k, model_path=v)
 
         return inner

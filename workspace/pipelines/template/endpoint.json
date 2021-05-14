@@ -1,28 +1,80 @@
 {
     "endpoint_name": "endpoint_name",
     "endpoint_version": "$:endpoint_version",
-    "endpoint_desc": "endpoint_desc endpoint",
+    "endpoint_desc": "endpoint_desc",
     "steps": [
         {
             "type": "PythonScriptStep",
             "name": "step_name",
-            "script_dir": "dir_relative_to_current_dir",
+            "script_dir": "",
             "script_name": "script_name.py",
             "allow_reuse": "true",
-            "output_dir": "output_dir",
-            "output_dataset_name": "output_dataset_name",
-            "input_dataset": 
-            {
-                "name": "input_dataset_name",
-                "version": "latest or version",
-                "as_named_input": "text"
-            },
+            "input": [
+                {
+                    "type": "named_input",
+                    "config": {
+                        "name": "registered_dataset_name",
+                        "version": "latest",
+                        "as_named_input": "key"
+                    }
+                },
+                {
+                    "type": "registered_dataset",
+                    "config": {
+                        "key": "key",
+                        "name": "register_dataset_as_name",
+                        "version": "latest"
+                    }
+                },
+                {
+                    "type": "registered_model",
+                    "config": {
+                        "key": "key",
+                        "name": "register_model_as_name",
+                        "version": "latest"
+                    }
+                },
+                {
+                    "type": "pipeline_data",
+                    "config": {
+                        "name": "pipeline_data_dir",
+                        "datastore": "default_or_datastore_name"
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "type": "registered_dataset",
+                    "config":{
+                        "name": "register_dataset_as_name",
+                        "datastore": "default_or_datastore_name",
+                        "description": "description",
+                        "tags": {}
+                    }
+                },
+                {
+                    "type": "registered_model",
+                    "config": {
+                        "name": "register_model_as_name",
+                        "path": "local_model_file_path",
+                        "description": "description",
+                        "tags": {}
+                    }
+                },
+                {
+                    "type": "pipeline_data",
+                    "config": {
+                        "name": "pipeline_data_dir",
+                        "datastore": "default_or_datastore_name"
+                    }
+                }
+            ],
             "runconfig": {
-                "cluster": "cluster_name",
+                "cluster": "cluster_compute_name",
                 "environment": {
                     "name": "environment_name",
                     "pip_wheel_path": "$:pip_wheel_path",
-                    "requirements_path": "dir_relative_to_current_dir/requirements.txt"
+                    "requirements_path": "path/to/requirements.txt"
                 }
             }
         }
