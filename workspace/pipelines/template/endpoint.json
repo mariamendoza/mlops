@@ -21,7 +21,6 @@
                 {
                     "type": "registered_dataset",
                     "config": {
-                        "key": "key",
                         "name": "register_dataset_as_name",
                         "version": "latest"
                     }
@@ -29,7 +28,6 @@
                 {
                     "type": "registered_model",
                     "config": {
-                        "key": "key",
                         "name": "register_model_as_name",
                         "version": "latest"
                     }
@@ -56,7 +54,6 @@
                     "type": "registered_model",
                     "config": {
                         "name": "register_model_as_name",
-                        "path": "local_model_file_path",
                         "description": "description",
                         "tags": {}
                     }

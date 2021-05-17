@@ -115,14 +115,17 @@ class StepDecorator():
                  output_reg_datasets=[],
                  output_reg_models=[]):
 
+        def config_to_json_list(config):
+            return list(map(lambda x: json.loads(x), config or []))
+
         self.input_datasets = input_datasets
         self.named_input_keys = named_input_keys
-        self.input_pipeline_data_dirs = list(map(lambda x: json.loads(x), input_pipeline_data_dirs or []))
-        self.input_reg_datasets = list(map(lambda x: json.loads(x), input_reg_datasets or []))
-        self.input_reg_models = list(map(lambda x: json.loads(x), input_reg_models or []))
-        self.output_pipeline_data_dirs = list(map(lambda x: json.loads(x), output_pipeline_data_dirs or []))
-        self.output_reg_datasets = list(map(lambda x: json.loads(x), output_reg_datasets or []))
-        self.output_reg_models = list(map(lambda x: json.loads(x), output_reg_models or []))
+        self.input_pipeline_data_dirs = config_to_json_list(input_pipeline_data_dirs)
+        self.input_reg_datasets = config_to_json_list(input_reg_datasets)
+        self.input_reg_models = config_to_json_list(input_reg_models)
+        self.output_pipeline_data_dirs = config_to_json_list(output_pipeline_data_dirs)
+        self.output_reg_datasets = config_to_json_list(output_reg_datasets)
+        self.output_reg_models = config_to_json_list(output_reg_models)
 
     def __call__(self, func):
         
@@ -133,7 +136,7 @@ class StepDecorator():
             ws = run.experiment.workspace
 
             def register_model(model_name, model_path):
-                model_config = list(filter(lambda x: x["name"] == model_name, self.output_reg_models))[0]
+                model_config = next(iter(filter(lambda x: x["name"] == model_name, self.output_reg_models)))
                 
                 tags = model_config.get("tags")
                 description = model_config.get("description")
@@ -141,7 +144,7 @@ class StepDecorator():
                 Model.register(workspace=ws, model_path=model_path, model_name=model_name, tags=tags, description=description)
 
             def register_dataset(dataset_name, dataframe):
-                dataset_config = list(filter(lambda x: x["name"] == dataset_name, self.output_reg_datasets))[0]
+                dataset_config = next(iter(filter(lambda x: x["name"] == dataset_name, self.output_reg_datasets)))
                 
                 datastore = dataset_config.get("datastore") or "default"
                 description = dataset_config.get("description")
@@ -176,25 +179,23 @@ class StepDecorator():
                 dataframes[dkey] = run.input_datasets[dkey].to_pandas_dataframe()
             
             for d in self.input_reg_datasets or []:
-                dkey = d["key"]
                 dname = d["name"]
                 dver = d.get("version")
                 if dver == "latest":
                     dver = None
 
-                dataframes[dkey] = Dataset.get_by_name(ws, name=dname, version=dver).to_pandas_dataframe()
+                dataframes[dname] = Dataset.get_by_name(ws, name=dname, version=dver).to_pandas_dataframe()
 
             kwargs["dataframes"] = dataframes
 
             models = {}
             for m in self.input_reg_models or []:
-                mkey = m["key"]
                 mname = m["name"]
                 mver = m.get("version")
                 if mver == "latest":
                     mver = None
 
-                models[mkey] = Model.get_model_path(model_name=mname, version=mver, _workspace=ws)
+                models[mname] = Model.get_model_path(model_name=mname, version=mver, _workspace=ws)
             
             kwargs["models"] = models
 
